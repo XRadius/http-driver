@@ -1,0 +1,11 @@
+[Unit]
+Description=http-driver
+
+[Service]
+Type=notify
+WorkingDirectory=/root/http-driver/bin
+ExecStart=/root/http-driver/bin/http-driver
+Environment=ASPNETCORE_URLS=http://*:8080/
+
+[Install]
+WantedBy=multi-user.target

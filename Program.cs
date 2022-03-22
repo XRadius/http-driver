@@ -1,5 +1,6 @@
 // Initialize the services.
 var builder = WebApplication.CreateBuilder(args);
+builder.Host.UseSystemd();
 builder.Services.AddControllers();
 builder.Services.AddSingleton<AuthorizationMiddleware>();
 builder.Services.AddSingleton<ExceptionMiddleware>();
