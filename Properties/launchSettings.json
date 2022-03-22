@@ -1,0 +1,11 @@
+﻿{
+  "profiles": {
+    "http-driver": {
+      "applicationUrl": "http://*:8080/",
+      "commandName": "Project",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      }
+    }
+  }
+}

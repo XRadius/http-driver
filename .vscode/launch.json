@@ -1,0 +1,11 @@
+{
+  "version": "0.2.0",
+  "configurations": [{
+    "cwd": "${workspaceFolder}",
+    "name": "launch",
+    "preLaunchTask": "build",
+    "program": "${workspaceFolder}/bin/Debug/net6.0/http-driver.dll",
+    "request": "launch",
+    "type": "coreclr"
+  }]
+}
