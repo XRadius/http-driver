@@ -12,7 +12,7 @@ public class MapController : Controller {
   [HttpGet]
   [ProducesResponseType(typeof(MapEntry[]), 200)]
   [ProducesResponseType(typeof(void), 404)]
-  [Route("proc/{pid}/map")]
+  [Route("proc/{pid}/maps")]
   public async Task<IActionResult> GetAsync(int pid) {
     return Json(await System.IO.File.ReadAllLinesAsync($"/proc/{pid}/maps").ContinueWith(x => x.Result
       .Where(x => !string.IsNullOrEmpty(x))
