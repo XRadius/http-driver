@@ -139,3 +139,7 @@ chmod +x service-install.sh
 ```
 
 Once you've followed the instructions, `http-driver` is ready for use!
+
+## Usage
+
+Open [http://localhost:8080/swagger](http://localhost:8080/swagger) to view the *OpenAPI* specification.
