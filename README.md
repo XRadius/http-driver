@@ -123,19 +123,19 @@ cd ~/http-driver
 6. Change `username` and `password` in `appsettings.json`:
 
 ```
-vim appsettings.json
+vim src/appsettings.json
 ```
 
 7. Enable execution of the *installation script*:
 
 ```
-chmod +x http-driver.sh
+chmod +x service-install.sh
 ```
 
 8. Run the *installation script* and follow the instructions:
 
 ```
-./http-driver.sh
+./service-install.sh
 ```
 
 Once you've followed the instructions, `http-driver` is ready for use!

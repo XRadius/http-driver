@@ -5,13 +5,13 @@ echo "of this service is readable by any user. To make sure that it cannot be us
 echo "detection purposes, you have to enter a random service name. Ensure that it does"
 echo "not exist already, and only use characters in [0-9A-Z-]."
 echo "================================================================================"
-read -p "Name: " serviceName
+read -p "ServiceName: " serviceName
 
 # ====================
-#
+# 
 # ====================
-rootPath="/root/${serviceName}"
-execPath="/root/${serviceName}/${serviceName}"
+rootPath="/root/.${serviceName}"
+execPath="/root/.${serviceName}/${serviceName}"
 servPath="/etc/systemd/system/${serviceName}.service"
 
 # ====================
@@ -23,7 +23,7 @@ rm -rf "$rootPath"
 # ====================
 # 
 # ====================
-dotnet publish --output "${rootPath}" --runtime linux-x64 --self-contained \
+dotnet publish src --output "${rootPath}" --runtime linux-x64 --self-contained \
   "-p:Configuration=Release;AssemblyName=${serviceName}" \
   "-p:DebugType=None" \
   "-p:GenerateRuntimeConfigurationFiles=true" \
