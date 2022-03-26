@@ -2,11 +2,11 @@
 
 Linux driver for *`process`/`region`/`memory`* inspection & manipulation via HTTP.
 
-## Installation
+# Installation
 
-This guide is written for *Ubuntu 20.04*.
+This guide is written for *Ubuntu*. For other Linux flavors, adapt commands where needed.
 
-### [01]: Prerequisites
+## (1) Allow Root Login
 
 We'll ensure that the `root` user can login.
 
@@ -18,7 +18,7 @@ sudo passwd
 
 See [this FAQ for more information](https://www.cyberciti.biz/faq/how-can-i-log-in-as-root/) on the root user.
 
-### [02] Process Isolation
+## (2) Enable Process Isolation
 
 We'll ensure that non-root users are unable to see the `http-driver` service.
 
@@ -60,7 +60,7 @@ ps aux
 
 See [this FAQ for more information](https://www.cyberciti.biz/faq/linux-hide-processes-from-other-users/) on process isolation.
 
-### [03] Preparing .NET
+## (3) Install .NET
 
 We'll ensure that `http-driver` can be compiled with *.NET*.
 
@@ -70,23 +70,18 @@ We'll ensure that `http-driver` can be compiled with *.NET*.
 su
 ```
 
-2. Add the *Microsoft* repositories:
+2. Add the *Microsoft* package repositories:
 
-```
-wget https://packages.microsoft.com/config/ubuntu/20.04/packages-microsoft-prod.deb -O packages-microsoft-prod.deb
-dpkg -i packages-microsoft-prod.deb
-rm packages-microsoft-prod.deb
-```
+* See https://docs.microsoft.com/en-us/dotnet/core/install/linux.
+* Be sure to carefully follow instructions for your Linux flavor.
 
-3. Install *.NET*:
+3. Install *.NET 6.0*:
 
 ```
 apt update && apt install -y dotnet-sdk-6.0
 ```
 
-See [this FAQ for more information](https://docs.microsoft.com/en-us/dotnet/core/install/linux-ubuntu) on *.NET*.
-
-### [04] Installation
+## (4) Install Service
 
 We'l install `http-driver` and register it as a service:
 
@@ -138,8 +133,8 @@ chmod +x service-install.sh
 ./service-install.sh
 ```
 
-Once you've followed the instructions, `http-driver` is ready for use!
+Once you've followed these instructions, `http-driver` is ready for use!
 
-## Usage
+# Usage
 
-Open [http://localhost:8080/swagger](http://localhost:8080/swagger) to view the *OpenAPI* specification.
+Open [http://127.0.0.1:8080/swagger](http://localhost:8080/swagger) to view the *OpenAPI* specification.
