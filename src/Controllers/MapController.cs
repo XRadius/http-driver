@@ -7,7 +7,7 @@ using NSwag.Annotations;
 [Route("api/v1.0")]
 [OpenApiTags("proc")]
 public class MapController : Controller {
-  private readonly static Regex me = new Regex(@"^([0-9A-F]+)-([0-9A-F]+)\s+(r|-)(w|-)(x|-)(p|s)\s+([0-9A-F]+)\s+([0-9A-F]{2}):([0-9A-F]{2})\s+([0-9]+)\s+(.*)$", RegexOptions.IgnoreCase);
+  private readonly static Regex me = new Regex(@"^([0-9A-F]+)-([0-9A-F]+)\s+(r|-)(w|-)(x|-)(p|s)\s+([0-9A-F]+)\s+([0-9A-F]+):([0-9A-F]+)\s+([0-9]+)\s+(.*)$", RegexOptions.IgnoreCase);
 
   [HttpGet]
   [ProducesResponseType(typeof(MapEntry[]), 200)]
