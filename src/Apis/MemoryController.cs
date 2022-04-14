@@ -1,10 +1,8 @@
 using System.Text.RegularExpressions;
 using Microsoft.AspNetCore.Mvc;
-using NSwag.Annotations;
 
 [ApiController]
-[Route("api/v1.0")]
-[OpenApiTags("proc")]
+[Route("api")]
 public class MemoryController : Controller {
   private readonly static Regex me = new Regex(@"^([0-9A-F]+):([0-9A-F]+)$", RegexOptions.IgnoreCase);
   private readonly MemoryService memoryService;
@@ -14,7 +12,6 @@ public class MemoryController : Controller {
   }
 
   [HttpGet]
-  [ProducesResponseType(typeof(FileContentResult), 200)]
   [Route("proc/{pid}/mem/{request}")]
   public async Task GetAsync(int pid, string request) {
     Response.Headers.Add("Content-Type", "application/octet-stream");
@@ -33,9 +30,6 @@ public class MemoryController : Controller {
   }
 
   [HttpPut]
-  [OpenApiBodyParameter("application/octet-stream")]
-  [ProducesResponseType(typeof(void), 204)]
-  [ProducesResponseType(typeof(void), 404)]
   [Route("proc/{pid}/mem/{request}")]
   public async Task PutAsync(int pid, string request) {
     Response.Headers.Add("Content-Type", "application/octet-stream");

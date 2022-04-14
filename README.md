@@ -83,7 +83,7 @@ apt update && apt install -y dotnet-sdk-6.0
 
 ## (4) Install Service
 
-We'l install `http-driver` and register it as a service:
+We'll install `http-driver` and register it as a service:
 
 1. Switch to `root` user:
 
@@ -135,6 +135,60 @@ chmod +x service-install.sh
 
 Once you've followed these instructions, `http-driver` is ready for use!
 
+# Updating
+
+We'll update `http-driver` and register it as a service:
+
+1. Switch to `root` user:
+
+```
+su
+```
+
+2. Open the `http-driver` directory:
+
+```
+cd ~/http-driver
+```
+
+3. Enable execution of the *uninstallation script*:
+
+```
+chmod +x service-uninstall.sh
+```
+
+4. Run the *uninstallation script* and follow the instructions:
+
+```
+./service-uninstall.sh
+```
+
+5. Remove your changes:
+
+```
+git reset --hard
+```
+
+6. Update this repository:
+
+```
+git pull
+```
+
+7. Change `username` and `password` in `appsettings.json`:
+
+```
+vim src/appsettings.json
+```
+
+8. Run the *installation script* and follow the instructions:
+
+```
+./service-install.sh
+```
+
+Once you've followed these instructions, `http-driver` is ready for use again!
+
 # Usage
 
-Open [http://127.0.0.1:8080/swagger](http://localhost:8080/swagger) to view the *OpenAPI* specification.
+Navigate to [http://127.0.0.1:8080/](http://127.0.0.1:8080/) and load a *connector* that makes use of *http-driver*.

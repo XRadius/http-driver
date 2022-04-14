@@ -1,0 +1,40 @@
+html, body {
+  background: #222;
+  margin: 0;
+  padding: 0;
+}
+
+.container {
+  max-width: 320px;
+  width: calc(100% - 16px);
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.content {
+  background: #FFF;
+  border-radius: 8px;
+  padding: 8px;
+}
+
+h1 {
+  color: #FFF;
+  margin: 0 0 4px 0;
+  text-align: center;
+}
+
+input[name=address] {
+  border: 1px solid #222;
+  padding: 8px;
+  outline: none;
+  width: calc(100% - 85px);
+}
+
+input[name=connect] {
+  border: 1px solid #222;
+  background: #CCC;
+  padding: 8px;
+  width: 80px;
+}

@@ -1,13 +1,9 @@
 using Microsoft.AspNetCore.Mvc;
-using NSwag.Annotations;
 
 [ApiController]
-[Route("api/v1.0")]
-[OpenApiTags("proc")]
+[Route("api")]
 public class ProcessController : Controller {
   [HttpGet]
-  [ProducesResponseType(typeof(ProcessEntry[]), 200)]
-  [ProducesResponseType(typeof(void), 404)]
   [Route("proc")]
   public async Task<IActionResult> GetAsync() {
     return Json(await Task.WhenAll(Directory.EnumerateDirectories("/proc")
