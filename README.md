@@ -16,7 +16,7 @@ We'll ensure that the `root` user can login.
 sudo passwd
 ```
 
-See [this FAQ for more information](https://www.cyberciti.biz/faq/how-can-i-log-in-as-root/) on the root user.
+See [this page for more information](https://www.cyberciti.biz/faq/how-can-i-log-in-as-root/) on the root user.
 
 ## (2) Enable Process Isolation
 
@@ -58,9 +58,45 @@ reboot
 ps aux
 ```
 
-See [this FAQ for more information](https://www.cyberciti.biz/faq/linux-hide-processes-from-other-users/) on process isolation.
+See [this page for more information](https://www.kernel.org/doc/Documentation/filesystems/proc.txt) on process isolation.
 
-## (3) Install .NET
+## (3) Disable Process Tracing
+
+We'll ensure that non-root users cannot use `ptrace` capabilities.
+
+1. Switch to the `root` user:
+
+```
+su
+```
+
+2. Open `/etc/sysctl.d/10-ptrace.conf` with *vim*:
+
+```
+vim /etc/sysctl.d/10-ptrace.conf
+```
+
+3. Change the `kernel.yama.ptrace_scope` value to `2`:
+
+```
+kernel.yama.ptrace_scope = 2
+```
+
+4. Reboot your system:
+
+```
+reboot
+```
+
+5. Check that the `ptrace_scope` is set to `2`:
+
+```
+sysctl kernel.yama.ptrace_scope
+```
+
+See [this page for more information](https://www.kernel.org/doc/Documentation/security/Yama.txt) on process tracing.
+
+## (4) Install .NET
 
 We'll ensure that `http-driver` can be compiled with *.NET*.
 
@@ -81,7 +117,7 @@ su
 apt update && apt install -y dotnet-sdk-6.0
 ```
 
-## (4) Install Service
+## (5) Install Service
 
 We'll install `http-driver` and register it as a service:
 
