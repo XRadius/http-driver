@@ -191,4 +191,4 @@ Once you've followed these instructions, `http-driver` is ready for use again!
 
 # Usage
 
-Navigate to [http://127.0.0.1:8080/](http://127.0.0.1:8080/) and load a *connector* that makes use of *http-driver*.
+Navigate to [http://0.0.0.0:8080/](http://0.0.0.0:8080/). Replace `0.0.0.0` for your *network-resolvable* IP.
