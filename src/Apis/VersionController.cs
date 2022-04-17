@@ -6,6 +6,6 @@ public class VersionController : Controller {
   [HttpGet]
   [Route("version")]
   public IActionResult GetAsync() {
-    return Json(2);
+    return Json(3);
   }
 }
