@@ -1,11 +1,20 @@
 using Microsoft.AspNetCore.Mvc;
 
-[ApiController]
-[Route("api")]
-public class VersionController : Controller {
-  [HttpGet]
-  [Route("version")]
-  public IActionResult GetAsync() {
-    return Json(3);
-  }
+namespace HttpDriver.Apis
+{
+    [ApiController]
+    [Route("api")]
+    public class VersionController : Controller
+    {
+        #region Methods
+
+        [HttpGet]
+        [Route("version")]
+        public IActionResult GetAsync()
+        {
+            return Json(4);
+        }
+
+        #endregion
+    }
 }

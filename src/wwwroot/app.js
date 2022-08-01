@@ -5,6 +5,6 @@ document.addEventListener('DOMContentLoaded', function() {
     ? connect.click()
     : undefined);
   connect.addEventListener('click', () => address.value
-    ? location.href = `/${encodeURIComponent(address.value)}/`
+    ? location.href = `/reverse-proxy/${encodeURIComponent(address.value)}/`
     : undefined);
 });
