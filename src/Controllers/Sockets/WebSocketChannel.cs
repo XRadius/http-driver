@@ -9,17 +9,17 @@ namespace HttpDriver.Controllers.Sockets
 {
     public class WebSocketChannel
     {
+        private readonly Tracker _entities;
         private readonly WebSocketSettings _settings;
         private readonly WebSocket _socket;
-        private readonly Tracker _tracker;
         private DateTime _inactiveTime;
 
         #region Constructors
 
         private WebSocketChannel(IMemoryService service, WebSocketSettings settings, WebSocket socket)
         {
+            _entities = new Tracker(service);
             _settings = settings;
-            _tracker = new Tracker(service);
             _socket = socket;
             SetInactiveTime();
         }
@@ -46,6 +46,9 @@ namespace HttpDriver.Controllers.Sockets
             {
                 try
                 {
+                    using var outputBuffer = new MemoryStream();
+                    using var output = new BinaryWriter(outputBuffer);
+
                     if (_inactiveTime < DateTime.Now)
                     {
                         cts.Cancel();
@@ -55,20 +58,14 @@ namespace HttpDriver.Controllers.Sockets
                     while (reader.TryDequeue(out var result))
                     {
                         if (result.Array == null) continue;
-                        using var ms = new MemoryStream(result.Array, result.Offset, result.Count);
-                        using var stream = new BinaryReader(ms);
-                        Receive(stream);
+                        using var inputBuffer = new MemoryStream(result.Array, result.Offset, result.Count);
+                        using var input = new BinaryReader(inputBuffer);
+                        Receive(input, output);
                     }
 
-                    var update = _tracker.Update();
-                    if (update != null)
-                    {
-                        using var ms = new MemoryStream();
-                        using var stream = new BinaryWriter(ms);
-                        stream.Write((byte)PacketType.EntityUpdate);
-                        update.Write(stream);
-                        writer.Enqueue(ms.ToArray());
-                    }
+                    _entities.Update(output);
+
+                    writer.Enqueue(outputBuffer.ToArray());
                 }
                 catch (OperationCanceledException)
                 {
@@ -81,23 +78,26 @@ namespace HttpDriver.Controllers.Sockets
             }
         }
 
-        private void Receive(BinaryReader stream)
+        private void Receive(BinaryReader input, BinaryWriter output)
         {
-            while (stream.BaseStream.Position < stream.BaseStream.Length)
+            while (input.BaseStream.Position < input.BaseStream.Length)
             {
-                switch ((PacketType)stream.ReadByte())
+                switch ((PacketType)input.ReadByte())
                 {
-                    case PacketType.Activity:
+                    case PacketType.BasicAlive:
                         SetInactiveTime();
                         break;
+                    case PacketType.BasicSync:
+                        BasicSync.Create(input).Write(output);
+                        break;
                     case PacketType.EntityChange:
-                        _tracker.Receive(EntityChange.Create(stream));
+                        _entities.Receive(EntityChange.Create(input));
                         break;
                     case PacketType.EntityCreate:
-                        _tracker.Receive(EntityCreate.Create(stream));
+                        _entities.Receive(EntityCreate.Create(input));
                         break;
                     case PacketType.EntityDelete:
-                        _tracker.Receive(EntityDelete.Create(stream));
+                        _entities.Receive(EntityDelete.Create(input));
                         break;
                 }
             }

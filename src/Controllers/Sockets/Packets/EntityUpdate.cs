@@ -1,4 +1,5 @@
 ﻿using System.Text.Json.Serialization;
+using HttpDriver.Controllers.Sockets.Abstracts.Enums;
 using HttpDriver.Controllers.Sockets.Abstracts.Interfaces;
 using HttpDriver.Controllers.Sockets.Extensions;
 
@@ -17,6 +18,7 @@ namespace HttpDriver.Controllers.Sockets.Packets
 
         public void Write(BinaryWriter stream)
         {
+            stream.Write((byte)PacketType.EntityUpdate);
             stream.WriteKnownEntityArray(Entities);
         }
 

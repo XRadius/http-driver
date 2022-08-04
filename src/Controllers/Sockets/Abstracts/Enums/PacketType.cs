@@ -2,7 +2,8 @@
 {
     public enum PacketType : byte
     {
-        Activity,
+        BasicAlive,
+        BasicSync,
         EntityChange,
         EntityCreate,
         EntityDelete,

@@ -44,7 +44,9 @@ namespace HttpDriver.Controllers.Sockets.Models
 
         public bool TryWrite(byte[] buffer)
         {
-            return buffer.Length == _previousBuffer.Length && _service.Write(_address, buffer);
+            if (buffer.Length != _previousBuffer.Length || !_service.Write(_address, buffer)) return false;
+            Buffer.BlockCopy(buffer, 0, _previousBuffer, 0, buffer.Length);
+            return true;
         }
 
         #endregion

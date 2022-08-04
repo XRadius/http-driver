@@ -34,6 +34,7 @@ namespace HttpDriver.Controllers.Sockets
 
         public void Enqueue(byte[] buffer)
         {
+            if (buffer.Length == 0) return;
             _queue.Enqueue(buffer);
             _event.Set();
         }

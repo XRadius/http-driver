@@ -38,16 +38,17 @@ namespace HttpDriver.Controllers.Sockets.Models
             }
         }
 
-        public EntityUpdate? Update()
+        public void Update(BinaryWriter stream)
         {
             var entities = _entities.Values
                 .Select(x => x.Update())
                 .Where(x => x != null)
                 .Select(x => x!)
                 .ToList();
-            return entities.Count != 0
+            var update = entities.Count != 0
                 ? new EntityUpdate { Entities = entities }
                 : null;
+            update?.Write(stream);
         }
 
         #endregion
