@@ -6,14 +6,14 @@ namespace HttpDriver.Controllers.Sockets.Extensions
     {
         #region Statics
 
-        public static byte[] ReadByteArray(this BinaryReader stream)
+        public static byte[] ReadKnownByteArray(this BinaryReader stream)
         {
             var size = stream.ReadUInt16();
             var buffer = stream.ReadBytes(size);
             return buffer;
         }
 
-        public static T[] ReadEntityArray<T>(this BinaryReader stream, Func<BinaryReader, T> factory)
+        public static T[] ReadKnownEntityArray<T>(this BinaryReader stream, Func<BinaryReader, T> factory)
         {
             var size = stream.ReadUInt16();
             var items = new T[size];
@@ -21,13 +21,13 @@ namespace HttpDriver.Controllers.Sockets.Extensions
             return items;
         }
 
-        public static void WriteByteArray(this BinaryWriter stream, byte[] buffer)
+        public static void WriteKnownByteArray(this BinaryWriter stream, byte[] buffer)
         {
             stream.Write((ushort)buffer.Length);
             stream.Write(buffer);
         }
 
-        public static void WriteEntityArray<T>(this BinaryWriter stream, ICollection<T> items) where T : IPacketWriter
+        public static void WriteKnownEntityArray<T>(this BinaryWriter stream, IReadOnlyCollection<T> items) where T : IPacketWriter
         {
             stream.Write((ushort)items.Count);
             foreach (var item in items) item.Write(stream);

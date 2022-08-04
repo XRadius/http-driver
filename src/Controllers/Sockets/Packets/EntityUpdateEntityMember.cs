@@ -1,21 +1,11 @@
 ﻿using System.Text.Json.Serialization;
+using HttpDriver.Controllers.Sockets.Abstracts.Interfaces;
 using HttpDriver.Controllers.Sockets.Extensions;
 
 namespace HttpDriver.Controllers.Sockets.Packets
 {
-    public record ChangeEntityMember
+    public record EntityUpdateEntityMember : IPacketWriter
     {
-        #region Constructors
-
-        public static ChangeEntityMember Create(BinaryReader stream)
-        {
-            var offset = stream.ReadUInt16();
-            var buffer = stream.ReadByteArray();
-            return new ChangeEntityMember { Offset = offset, Buffer = buffer };
-        }
-
-        #endregion
-
         #region Properties
 
         [JsonPropertyName("buffer")]
@@ -23,6 +13,16 @@ namespace HttpDriver.Controllers.Sockets.Packets
 
         [JsonPropertyName("offset")]
         public ushort Offset { get; init; }
+
+        #endregion
+
+        #region Implementation of IPacketWriter
+
+        public void Write(BinaryWriter stream)
+        {
+            stream.Write(Offset);
+            stream.WriteKnownByteArray(Buffer);
+        }
 
         #endregion
     }

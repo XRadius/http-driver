@@ -2,14 +2,14 @@
 
 namespace HttpDriver.Controllers.Sockets.Packets
 {
-    public record DeleteEntity
+    public record EntityDelete
     {
         #region Constructors
 
-        public static DeleteEntity Create(BinaryReader stream)
+        public static EntityDelete Create(BinaryReader stream)
         {
             var address = stream.ReadUInt64();
-            return new DeleteEntity { Address = address };
+            return new EntityDelete { Address = address };
         }
 
         #endregion

@@ -2,16 +2,16 @@ using System.Text.Json.Serialization;
 
 namespace HttpDriver.Controllers.Sockets.Packets
 {
-    public record CreateEntityMember
+    public record EntityCreateMember
     {
         #region Constructors
 
-        public static CreateEntityMember Create(BinaryReader stream)
+        public static EntityCreateMember Create(BinaryReader stream)
         {
             var offset = stream.ReadUInt16();
             var interval = stream.ReadUInt16();
             var size = stream.ReadUInt16();
-            return new CreateEntityMember { Interval = interval, Offset = offset, Size = size };
+            return new EntityCreateMember { Interval = interval, Offset = offset, Size = size };
         }
 
         #endregion

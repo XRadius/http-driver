@@ -3,9 +3,9 @@
     public enum PacketType : byte
     {
         Activity,
-        ChangeEntity,
-        CreateEntity,
-        DeleteEntity,
-        Update
+        EntityChange,
+        EntityCreate,
+        EntityDelete,
+        EntityUpdate
     }
 }

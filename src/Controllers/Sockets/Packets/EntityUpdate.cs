@@ -4,15 +4,12 @@ using HttpDriver.Controllers.Sockets.Extensions;
 
 namespace HttpDriver.Controllers.Sockets.Packets
 {
-    public record UpdateEntityMember : IPacketWriter
+    public record EntityUpdate : IPacketWriter
     {
         #region Properties
 
-        [JsonPropertyName("buffer")]
-        public byte[] Buffer { get; init; } = Array.Empty<byte>();
-
-        [JsonPropertyName("offset")]
-        public ushort Offset { get; init; }
+        [JsonPropertyName("entities")]
+        public IReadOnlyCollection<EntityUpdateEntity> Entities { get; init; } = Array.Empty<EntityUpdateEntity>();
 
         #endregion
 
@@ -20,8 +17,7 @@ namespace HttpDriver.Controllers.Sockets.Packets
 
         public void Write(BinaryWriter stream)
         {
-            stream.Write(Offset);
-            stream.WriteByteArray(Buffer);
+            stream.WriteKnownEntityArray(Entities);
         }
 
         #endregion

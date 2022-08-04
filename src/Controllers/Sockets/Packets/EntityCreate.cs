@@ -3,15 +3,15 @@ using HttpDriver.Controllers.Sockets.Extensions;
 
 namespace HttpDriver.Controllers.Sockets.Packets
 {
-    public record CreateEntity
+    public record EntityCreate
     {
         #region Constructors
 
-        public static CreateEntity Create(BinaryReader stream)
+        public static EntityCreate Create(BinaryReader stream)
         {
             var address = stream.ReadUInt64();
-            var members = stream.ReadEntityArray(CreateEntityMember.Create);
-            return new CreateEntity { Address = address, Members = members };
+            var members = stream.ReadKnownEntityArray(EntityCreateMember.Create);
+            return new EntityCreate { Address = address, Members = members };
         }
 
         #endregion
@@ -22,7 +22,7 @@ namespace HttpDriver.Controllers.Sockets.Packets
         public ulong Address { get; init; }
 
         [JsonPropertyName("members")]
-        public ICollection<CreateEntityMember> Members { get; init; } = Array.Empty<CreateEntityMember>();
+        public IReadOnlyCollection<EntityCreateMember> Members { get; init; } = Array.Empty<EntityCreateMember>();
 
         #endregion
     }

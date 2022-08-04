@@ -33,7 +33,10 @@
 
         protected override void Dispose(bool explicitDisposing)
         {
-            if (explicitDisposing) _timer.Dispose();
+            if (explicitDisposing)
+            {
+                _timer.Dispose();
+            }
 
             base.Dispose(explicitDisposing);
         }
