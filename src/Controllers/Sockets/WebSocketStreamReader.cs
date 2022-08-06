@@ -5,18 +5,20 @@ using HttpDriver.Controllers.Sockets.Extensions;
 
 namespace HttpDriver.Controllers.Sockets
 {
-    // TODO: Gracefully handle messages exceeding buffer size.
     public class WebSocketStreamReader : IDisposable
     {
-        private readonly ConcurrentQueue<ArraySegment<byte>> _queue;
+        private readonly ConcurrentQueue<byte[]> _queue;
         private readonly WebSocket _socket;
         private readonly CancellationToken _token;
+        private byte[] _buffer;
+        private int _offset;
 
         #region Constructors
 
         private WebSocketStreamReader(WebSocket socket, CancellationToken token)
         {
-            _queue = new ConcurrentQueue<ArraySegment<byte>>();
+            _buffer = new byte[1024];
+            _queue = new ConcurrentQueue<byte[]>();
             _socket = socket;
             _token = token;
         }
@@ -32,9 +34,19 @@ namespace HttpDriver.Controllers.Sockets
 
         #region Methods
 
-        public bool TryDequeue(out ArraySegment<byte> result)
+        public bool TryDequeue(out byte[]? result)
         {
             return _queue.TryDequeue(out result);
+        }
+
+        private ArraySegment<byte> Prepare(int count)
+        {
+            while (_offset + count > _buffer.Length)
+            {
+                Array.Resize(ref _buffer, _buffer.Length * 2);
+            }
+
+            return new ArraySegment<byte>(_buffer, _offset, count);
         }
 
         private async Task RunAsync()
@@ -43,9 +55,15 @@ namespace HttpDriver.Controllers.Sockets
             {
                 try
                 {
-                    var buffer = new byte[8192];
-                    var count = await _socket.ReceiveMessageAsync(buffer, _token);
-                    if (count != 0) _queue.Enqueue(new ArraySegment<byte>(buffer, 0, count));
+                    var buffer = Prepare(1024);
+                    var result = await _socket.ReceiveAsync(buffer, _token);
+                    _offset += result.Count;
+
+                    if (result.EndOfMessage)
+                    {
+                        _queue.Enqueue(_buffer.Copy(0, _offset));
+                        _offset = 0;
+                    }
                 }
                 catch (OperationCanceledException)
                 {

@@ -57,8 +57,8 @@ namespace HttpDriver.Controllers.Sockets
 
                     while (reader.TryDequeue(out var result))
                     {
-                        if (result.Array == null) continue;
-                        using var inputBuffer = new MemoryStream(result.Array, result.Offset, result.Count);
+                        if (result == null) continue;
+                        using var inputBuffer = new MemoryStream(result);
                         using var input = new BinaryReader(inputBuffer);
                         Receive(input, output);
                     }
