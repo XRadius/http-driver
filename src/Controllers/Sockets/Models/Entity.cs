@@ -6,7 +6,7 @@ namespace HttpDriver.Controllers.Sockets.Models
     public class Entity
     {
         private readonly EntityCreate _entity;
-        private readonly Dictionary<ushort, EntityMember> _members;
+        private readonly Dictionary<uint, EntityMember> _members;
 
         #region Constructors
 

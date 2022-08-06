@@ -21,7 +21,8 @@ namespace HttpDriver.Controllers.Sockets.Packets
         public void Write(BinaryWriter stream)
         {
             stream.Write(Address);
-            stream.WriteKnownEntityArray(Members);
+            stream.WriteVariableLength((uint)Members.Count);
+            foreach (var member in Members) member.Write(stream);
         }
 
         #endregion

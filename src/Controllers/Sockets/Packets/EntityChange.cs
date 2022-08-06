@@ -10,7 +10,8 @@ namespace HttpDriver.Controllers.Sockets.Packets
         public static EntityChange Create(BinaryReader stream)
         {
             var address = stream.ReadUInt64();
-            var changes = stream.ReadKnownEntityArray(EntityChangeMember.Create);
+            var changesSize = (int)stream.ReadVariableLength();
+            var changes = Enumerable.Range(0, changesSize).Select(_ => EntityChangeMember.Create(stream)).ToList();
             return new EntityChange { Address = address, Changes = changes };
         }
 

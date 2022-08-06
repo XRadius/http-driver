@@ -1,36 +1,38 @@
-using HttpDriver.Controllers.Sockets.Abstracts.Interfaces;
-
 namespace HttpDriver.Controllers.Sockets.Extensions
 {
     public static class StreamExtensions
     {
         #region Statics
 
-        public static byte[] ReadKnownByteArray(this BinaryReader stream)
+        public static uint ReadVariableLength(this BinaryReader stream)
         {
-            var size = stream.ReadUInt16();
-            var buffer = stream.ReadBytes(size);
-            return buffer;
+            var more = true;
+            var value = 0u;
+            var shift = 0;
+
+            while (more)
+            {
+                var chunk = stream.ReadByte();
+                more = (chunk & 0x80u) != 0;
+                value |= (chunk & 0x7Fu) << shift;
+                shift += 7;
+            }
+
+            return value;
         }
 
-        public static T[] ReadKnownEntityArray<T>(this BinaryReader stream, Func<BinaryReader, T> factory)
+        public static void WriteVariableLength(this BinaryWriter stream, uint value)
         {
-            var size = stream.ReadUInt16();
-            var items = new T[size];
-            for (var i = 0; i < size; i++) items[i] = factory(stream);
-            return items;
-        }
+            var more = true;
 
-        public static void WriteKnownByteArray(this BinaryWriter stream, byte[] buffer)
-        {
-            stream.Write((ushort)buffer.Length);
-            stream.Write(buffer);
-        }
-
-        public static void WriteKnownEntityArray<T>(this BinaryWriter stream, IReadOnlyCollection<T> items) where T : IPacketWriter
-        {
-            stream.Write((ushort)items.Count);
-            foreach (var item in items) item.Write(stream);
+            while (more)
+            {
+                var chunk = (byte)(value & 0x7Fu);
+                value >>= 7;
+                more = value != 0;
+                chunk |= (byte)(more ? 0x80u : 0);
+                stream.Write(chunk);
+            }
         }
 
         #endregion

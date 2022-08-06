@@ -1,4 +1,5 @@
 using System.Text.Json.Serialization;
+using HttpDriver.Controllers.Sockets.Extensions;
 
 namespace HttpDriver.Controllers.Sockets.Packets
 {
@@ -8,9 +9,9 @@ namespace HttpDriver.Controllers.Sockets.Packets
 
         public static EntityCreateMember Create(BinaryReader stream)
         {
-            var offset = stream.ReadUInt16();
-            var interval = stream.ReadUInt16();
-            var size = stream.ReadUInt16();
+            var offset = stream.ReadVariableLength();
+            var interval = stream.ReadVariableLength();
+            var size = stream.ReadVariableLength();
             return new EntityCreateMember { Interval = interval, Offset = offset, Size = size };
         }
 
@@ -19,13 +20,13 @@ namespace HttpDriver.Controllers.Sockets.Packets
         #region Properties
 
         [JsonPropertyName("interval")]
-        public ushort Interval { get; init; }
+        public uint Interval { get; init; }
 
         [JsonPropertyName("offset")]
-        public ushort Offset { get; init; }
+        public uint Offset { get; init; }
 
         [JsonPropertyName("size")]
-        public ushort Size { get; init; }
+        public uint Size { get; init; }
 
         #endregion
     }

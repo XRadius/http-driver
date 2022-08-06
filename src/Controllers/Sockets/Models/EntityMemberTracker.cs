@@ -10,7 +10,7 @@ namespace HttpDriver.Controllers.Sockets.Models
 
         #region Constructors
 
-        public EntityMemberTracker(ulong address, int bufferSize, IMemoryService service)
+        public EntityMemberTracker(ulong address, uint bufferSize, IMemoryService service)
         {
             _address = address;
             _previousBuffer = new byte[bufferSize];

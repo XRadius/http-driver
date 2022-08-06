@@ -12,7 +12,7 @@ namespace HttpDriver.Controllers.Sockets.Packets
         public byte[] Buffer { get; init; } = Array.Empty<byte>();
 
         [JsonPropertyName("offset")]
-        public ushort Offset { get; init; }
+        public uint Offset { get; init; }
 
         #endregion
 
@@ -20,8 +20,9 @@ namespace HttpDriver.Controllers.Sockets.Packets
 
         public void Write(BinaryWriter stream)
         {
-            stream.Write(Offset);
-            stream.WriteKnownByteArray(Buffer);
+            stream.WriteVariableLength(Offset);
+            stream.WriteVariableLength((uint)Buffer.Length);
+            stream.Write(Buffer);
         }
 
         #endregion

@@ -10,7 +10,7 @@ namespace HttpDriver.Controllers.Sockets.Packets
 
         public static BasicSync Create(BinaryReader stream)
         {
-            var id = stream.ReadUInt16();
+            var id = stream.ReadByte();
             return new BasicSync { Id = id };
         }
 
@@ -19,7 +19,7 @@ namespace HttpDriver.Controllers.Sockets.Packets
         #region Properties
 
         [JsonPropertyName("id")]
-        public ushort Id { get; init; }
+        public byte Id { get; init; }
 
         #endregion
 

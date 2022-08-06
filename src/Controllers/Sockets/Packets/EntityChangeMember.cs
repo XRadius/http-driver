@@ -9,8 +9,9 @@ namespace HttpDriver.Controllers.Sockets.Packets
 
         public static EntityChangeMember Create(BinaryReader stream)
         {
-            var offset = stream.ReadUInt16();
-            var buffer = stream.ReadKnownByteArray();
+            var offset = stream.ReadVariableLength();
+            var bufferSize = (int)stream.ReadVariableLength();
+            var buffer = stream.ReadBytes(bufferSize);
             return new EntityChangeMember { Offset = offset, Buffer = buffer };
         }
 
@@ -22,7 +23,7 @@ namespace HttpDriver.Controllers.Sockets.Packets
         public byte[] Buffer { get; init; } = Array.Empty<byte>();
 
         [JsonPropertyName("offset")]
-        public ushort Offset { get; init; }
+        public uint Offset { get; init; }
 
         #endregion
     }

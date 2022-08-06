@@ -10,7 +10,8 @@ namespace HttpDriver.Controllers.Sockets.Packets
         public static EntityCreate Create(BinaryReader stream)
         {
             var address = stream.ReadUInt64();
-            var members = stream.ReadKnownEntityArray(EntityCreateMember.Create);
+            var membersSize = (int)stream.ReadVariableLength();
+            var members = Enumerable.Range(0, membersSize).Select(_ => EntityCreateMember.Create(stream)).ToList();
             return new EntityCreate { Address = address, Members = members };
         }
 

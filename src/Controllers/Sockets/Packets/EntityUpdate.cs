@@ -19,7 +19,8 @@ namespace HttpDriver.Controllers.Sockets.Packets
         public void Write(BinaryWriter stream)
         {
             stream.Write((byte)PacketType.EntityUpdate);
-            stream.WriteKnownEntityArray(Entities);
+            stream.WriteVariableLength((uint)Entities.Count);
+            foreach (var entity in Entities) entity.Write(stream);
         }
 
         #endregion
