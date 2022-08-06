@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using System.Text.RegularExpressions;
 using HttpDriver.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -27,7 +28,7 @@ namespace HttpDriver.Apis
                 if (!match.Success) continue;
                 var address = Parse(match.Groups[1].Value);
                 var buffer = new byte[Parse(match.Groups[2].Value)];
-                if (!memoryService.Read(address, buffer)) continue;
+                if (!memoryService.Read(address, buffer) && Debugger.IsAttached) Console.WriteLine($"Failed {address:x}:{buffer.Length:x}");
                 await Response.Body.WriteAsync(BitConverter.GetBytes(i));
                 await Response.Body.WriteAsync(buffer);
             }
