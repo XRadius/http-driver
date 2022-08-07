@@ -3,13 +3,13 @@ using HttpDriver.Utilities.Linux;
 
 namespace HttpDriver.Services
 {
-    public class DirectMemoryService : IMemoryService
+    public class ProcessMemoryService : IMemoryService
     {
         private readonly int _pid;
 
         #region Constructors
 
-        public DirectMemoryService(int pid)
+        public ProcessMemoryService(int pid)
         {
             _pid = pid;
         }

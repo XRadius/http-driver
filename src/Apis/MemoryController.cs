@@ -1,4 +1,3 @@
-using System.Diagnostics;
 using System.Text.RegularExpressions;
 using HttpDriver.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -20,7 +19,8 @@ namespace HttpDriver.Apis
         public async Task GetAsync(int pid, string request)
         {
             Response.Headers.Add("Content-Type", "application/octet-stream");
-            using var memoryService = new DirectMemoryService(pid);
+            using var gdb = new GdbMemoryService(pid);
+            using var process = new ProcessMemoryService(pid);
             var maps = request.Split(',');
             for (ushort i = 0; i < maps.Length; i++)
             {
@@ -28,7 +28,7 @@ namespace HttpDriver.Apis
                 if (!match.Success) continue;
                 var address = Parse(match.Groups[1].Value);
                 var buffer = new byte[Parse(match.Groups[2].Value)];
-                if (!memoryService.Read(address, buffer) && Debugger.IsAttached) Console.WriteLine($"Failed {address:x}:{buffer.Length:x}");
+                if (!process.Read(address, buffer) && !gdb.Read(address, buffer)) continue;
                 await Response.Body.WriteAsync(BitConverter.GetBytes(i));
                 await Response.Body.WriteAsync(buffer);
             }
@@ -39,7 +39,8 @@ namespace HttpDriver.Apis
         public async Task PutAsync(int pid, string request)
         {
             Response.Headers.Add("Content-Type", "application/octet-stream");
-            using var memoryService = new DirectMemoryService(pid);
+            using var gdb = new GdbMemoryService(pid);
+            using var process = new ProcessMemoryService(pid);
             var maps = request.Split(',');
             for (ushort i = 0; i < maps.Length; i++)
             {
@@ -48,7 +49,7 @@ namespace HttpDriver.Apis
                 var address = Parse(match.Groups[1].Value);
                 var buffer = new byte[Parse(match.Groups[2].Value)];
                 await Request.Body.ReadAsync(buffer);
-                if (!memoryService.Write(address, buffer)) continue;
+                if (!process.Write(address, buffer) && !gdb.Write(address, buffer)) continue;
                 await Response.Body.WriteAsync(BitConverter.GetBytes(i));
             }
         }
