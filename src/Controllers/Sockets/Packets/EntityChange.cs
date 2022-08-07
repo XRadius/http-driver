@@ -9,19 +9,19 @@ namespace HttpDriver.Controllers.Sockets.Packets
 
         public static EntityChange Create(BinaryReader stream)
         {
-            var address = stream.ReadUInt64();
+            var id = stream.ReadVariableLength();
             var changesSize = (int)stream.ReadVariableLength();
             var changes = Enumerable.Range(0, changesSize).Select(_ => EntityChangeMember.Create(stream)).ToList();
-            return new EntityChange { Address = address, Changes = changes };
+            return new EntityChange { Id = id, Changes = changes };
         }
 
         #endregion
 
         #region Properties
 
-        [JsonPropertyName("address")]
-        public ulong Address { get; init; }
-
+        [JsonPropertyName("id")]
+        public uint Id { get; init; }
+        
         [JsonPropertyName("changes")]
         public IReadOnlyCollection<EntityChangeMember> Changes { get; init; } = Array.Empty<EntityChangeMember>();
 

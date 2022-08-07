@@ -5,14 +5,14 @@ namespace HttpDriver.Controllers.Sockets.Models
 {
     public class Tracker
     {
-        private readonly Dictionary<ulong, Entity> _entities;
+        private readonly Dictionary<uint, Entity> _entities;
         private readonly IMemoryService _service;
 
         #region Constructors
 
         public Tracker(IMemoryService service)
         {
-            _entities = new Dictionary<ulong, Entity>();
+            _entities = new Dictionary<uint, Entity>();
             _service = service;
         }
 
@@ -25,15 +25,15 @@ namespace HttpDriver.Controllers.Sockets.Models
             switch (packet)
             {
                 case EntityChange change:
-                    if (!_entities.TryGetValue(change.Address, out var entity)) break;
+                    if (!_entities.TryGetValue(change.Id, out var entity)) break;
                     foreach (var child in change.Changes) entity.Receive(child);
                     break;
                 case EntityCreate create:
-                    if (_entities.ContainsKey(create.Address)) break;
-                    _entities[create.Address] = new Entity(create, _service);
+                    if (_entities.ContainsKey(create.Id)) break;
+                    _entities[create.Id] = new Entity(create, _service);
                     break;
                 case EntityDelete delete:
-                    _entities.Remove(delete.Address);
+                    _entities.Remove(delete.Id);
                     break;
             }
         }

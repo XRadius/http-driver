@@ -8,8 +8,8 @@ namespace HttpDriver.Controllers.Sockets.Packets
     {
         #region Properties
 
-        [JsonPropertyName("address")]
-        public ulong Address { get; init; }
+        [JsonPropertyName("id")]
+        public uint Id { get; init; }
 
         [JsonPropertyName("members")]
         public IReadOnlyCollection<EntityUpdateEntityMember> Members { get; init; } = Array.Empty<EntityUpdateEntityMember>();
@@ -20,7 +20,7 @@ namespace HttpDriver.Controllers.Sockets.Packets
 
         public void Write(BinaryWriter stream)
         {
-            stream.Write(Address);
+            stream.WriteVariableLength(Id);
             stream.WriteVariableLength((uint)Members.Count);
             foreach (var member in Members) member.Write(stream);
         }

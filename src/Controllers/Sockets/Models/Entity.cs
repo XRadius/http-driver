@@ -34,7 +34,7 @@ namespace HttpDriver.Controllers.Sockets.Models
                 .Select(x => x!)
                 .ToList();
             return members.Count != 0
-                ? new EntityUpdateEntity { Address = _entity.Address, Members = members }
+                ? new EntityUpdateEntity { Id = _entity.Id, Members = members }
                 : null;
         }
 

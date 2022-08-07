@@ -1,4 +1,5 @@
 ﻿using System.Text.Json.Serialization;
+using HttpDriver.Controllers.Sockets.Extensions;
 
 namespace HttpDriver.Controllers.Sockets.Packets
 {
@@ -8,16 +9,16 @@ namespace HttpDriver.Controllers.Sockets.Packets
 
         public static EntityDelete Create(BinaryReader stream)
         {
-            var address = stream.ReadUInt64();
-            return new EntityDelete { Address = address };
+            var id = stream.ReadVariableLength();
+            return new EntityDelete { Id = id };
         }
 
         #endregion
 
         #region Properties
 
-        [JsonPropertyName("address")]
-        public ulong Address { get; init; }
+        [JsonPropertyName("Id")]
+        public uint Id { get; init; }
 
         #endregion
     }
