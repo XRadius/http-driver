@@ -1,18 +1,19 @@
-﻿using HttpDriver.Controllers.Sockets.Packets;
+﻿using HttpDriver.Controllers.Sockets.Abstracts.Interfaces;
+using HttpDriver.Controllers.Sockets.Packets;
 using HttpDriver.Utilities;
 
 namespace HttpDriver.Controllers.Sockets.Models
 {
     public class Tracker
     {
-        private readonly Dictionary<uint, Entity> _entities;
+        private readonly Dictionary<uint, IEntityProvider> _entities;
         private readonly IMemoryService _service;
 
         #region Constructors
 
         public Tracker(IMemoryService service)
         {
-            _entities = new Dictionary<uint, Entity>();
+            _entities = new Dictionary<uint, IEntityProvider>();
             _service = service;
         }
 
@@ -30,7 +31,7 @@ namespace HttpDriver.Controllers.Sockets.Models
                     break;
                 case EntityCreate create:
                     if (_entities.ContainsKey(create.Id)) break;
-                    _entities[create.Id] = new Entity(create, _service);
+                    _entities[create.Id] = create.RequestBatch ? new BatchEntity(create, _service) : new Entity(create, _service);
                     break;
                 case EntityDelete delete:
                     _entities.Remove(delete.Id);

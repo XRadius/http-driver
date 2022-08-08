@@ -1,9 +1,10 @@
+using HttpDriver.Controllers.Sockets.Abstracts.Interfaces;
 using HttpDriver.Controllers.Sockets.Packets;
 using HttpDriver.Utilities;
 
 namespace HttpDriver.Controllers.Sockets.Models
 {
-    public class Entity
+    public class Entity : IEntityProvider
     {
         private readonly EntityCreate _entity;
         private readonly Dictionary<uint, EntityMember> _members;
@@ -20,13 +21,7 @@ namespace HttpDriver.Controllers.Sockets.Models
 
         #region Methods
 
-        public void Receive(EntityChangeMember change)
-        {
-            if (!_members.TryGetValue(change.Offset, out var member)) return;
-            member.Receive(change);
-        }
-
-        public EntityUpdateEntity? Update()
+        private EntityUpdateEntity? Process()
         {
             var members = _members.Values
                 .Select(x => x.Update())
@@ -36,6 +31,21 @@ namespace HttpDriver.Controllers.Sockets.Models
             return members.Count != 0
                 ? new EntityUpdateEntity { Id = _entity.Id, Members = members }
                 : null;
+        }
+
+        #endregion
+
+        #region Implementation of IEntityProvider
+
+        public void Receive(EntityChangeMember change)
+        {
+            if (!_members.TryGetValue(change.Offset, out var member)) return;
+            member.Receive(change);
+        }
+
+        public EntityUpdateEntity? Update()
+        {
+            return Process();
         }
 
         #endregion

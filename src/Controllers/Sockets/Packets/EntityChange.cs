@@ -19,11 +19,11 @@ namespace HttpDriver.Controllers.Sockets.Packets
 
         #region Properties
 
-        [JsonPropertyName("id")]
-        public uint Id { get; init; }
-        
         [JsonPropertyName("changes")]
         public IReadOnlyCollection<EntityChangeMember> Changes { get; init; } = Array.Empty<EntityChangeMember>();
+
+        [JsonPropertyName("id")]
+        public uint Id { get; init; }
 
         #endregion
     }
