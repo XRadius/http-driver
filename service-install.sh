@@ -42,7 +42,8 @@ rm -rf "$rootPath"
 # 
 # ====================
 dotnet publish src --output "${rootPath}" --runtime linux-x64 --self-contained \
-  "-p:Configuration=Release;AssemblyName=${serviceName}" \
+  "-p:Configuration=Release" \
+  "-p:AssemblyName=${serviceName}" \
   "-p:DebugType=None" \
   "-p:GenerateRuntimeConfigurationFiles=true" \
   "-p:PublishSingleFile=true"
