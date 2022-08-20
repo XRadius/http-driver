@@ -185,7 +185,6 @@
         &lt;Entry.Match&gt;&#xD;
           &lt;And&gt;&#xD;
             &lt;Static /&gt;&#xD;
-            &lt;Access Is="Public" /&gt;&#xD;
             &lt;Kind Is="Method" /&gt;&#xD;
             &lt;Name Is="Create.*" /&gt;&#xD;
           &lt;/And&gt;&#xD;

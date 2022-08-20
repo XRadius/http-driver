@@ -12,7 +12,7 @@ namespace HttpDriver.Apis
         [Route("version")]
         public IActionResult GetAsync()
         {
-            return Json(5);
+            return Json(6);
         }
 
         #endregion
