@@ -20,7 +20,7 @@ This driver is not locked to any single process. Assume that websites utilizing 
 
 # Installation
 
-This guide is written for *Ubuntu*. For other Linux flavors, adapt commands where needed.
+This guide is written for *Ubuntu* and *Arch Linux*. For other Linux flavors, adapt commands where needed.
 
 ## (1) Allow Root Login
 
@@ -38,37 +38,48 @@ See [this page for more information](https://www.cyberciti.biz/faq/how-can-i-log
 
 We'll ensure that non-root users are unable to see the `http-driver` service.
 
-1. Switch to the `root` user:
+1. Install dependencies:
 
 ```
-su
+sudo apt install -y vim  # Ubuntu based distros
+or
+sudo pacman -S vim # Arch based distros
 ```
 
-2. Install dependencies:
+
+2. Hide `root` processes for non-root users:
+
+Some components might not work when hiding `/proc`, like mounting a drive via as example Dolphin. This can be bypassed by mounting `/proc` only when necessary (Method 1), other than always hiding `/proc` on boot via fstab (Method2).
+
+### Method 1 (Has to be done again after a restart):
+
 
 ```
-apt install -y vim
+sudo mount -o remount,rw,nosuid,nodev,noexec,relatime,hidepid=2 /proc
 ```
 
-3. Open `/etc/fstab` with *vim*:
+
+### Method 2 (Will always hide processes at boot, might break things):
+
+
+Open `/etc/fstab` with *vim*:
 
 ```
-vim /etc/fstab
+sudo vim /etc/fstab
 ```
 
-4. Add the following line:
-
+Add this below in the text file:
 ```
 proc /proc proc defaults,nosuid,nodev,noexec,relatime,hidepid=2 0 0
 ```
 
-5. Reboot your system:
+Reboot your system:
 
 ```
 reboot
 ```
 
-6. Check that your non-root user cannot see root processes:
+3. Check that your non-root user cannot see root processes:
 
 ```
 ps aux
@@ -80,31 +91,25 @@ See [this page for more information](https://www.kernel.org/doc/Documentation/fi
 
 We'll ensure that non-root users cannot use `ptrace` capabilities.
 
-1. Switch to the `root` user:
+1. Open `/etc/sysctl.d/10-ptrace.conf` with *vim*:
 
 ```
-su
+sudo vim /etc/sysctl.d/10-ptrace.conf
 ```
 
-2. Open `/etc/sysctl.d/10-ptrace.conf` with *vim*:
-
-```
-vim /etc/sysctl.d/10-ptrace.conf
-```
-
-3. Change the `kernel.yama.ptrace_scope` value to `2`:
+2. Change the `kernel.yama.ptrace_scope` value to `2`:
 
 ```
 kernel.yama.ptrace_scope = 2
 ```
 
-4. Reboot your system:
+3. Reboot your system:
 
 ```
 reboot
 ```
 
-5. Check that the `ptrace_scope` is set to `2`:
+4. Check that the `ptrace_scope` is set to `2`:
 
 ```
 sysctl kernel.yama.ptrace_scope
@@ -116,43 +121,41 @@ See [this page for more information](https://www.kernel.org/doc/Documentation/se
 
 We'll ensure that `http-driver` can be compiled with *.NET*.
 
-1. Switch to the `root` user:
-
-```
-su
-```
-
-2. Add the *Microsoft* package repositories:
+1. Add the *Microsoft* package repositories:
 
 * See https://docs.microsoft.com/en-us/dotnet/core/install/linux.
 * Be sure to carefully follow instructions for your Linux flavor.
 
-3. Install *.NET 6.0*:
+2. Install *.NET 6.0*:
 
 ```
-apt update && apt install -y dotnet-sdk-6.0
+sudo apt update && apt install -y dotnet-sdk-6.0  # Ubuntu based distros
+or
+sudo pacman -S dotnet-sdk-6.0  # Arch based distros
 ```
 
 ## (5) Install Service
 
 We'll install `http-driver` and register it as a service:
 
-1. Switch to `root` user:
+1. Install dependencies:
+
+```
+sudo apt install -y git  # Ubuntu based distros
+or
+sudo pacman -S git  # Arch based distros
+```
+
+2. Switch to `root` user:
 
 ```
 su
 ```
 
-2. Open the `/root` directory: 
+3. Open the `/root` directory: 
 
 ```
 cd ~
-```
-
-3. Install dependencies:
-
-```
-apt install -y git
 ```
 
 4. Clone this repository:
@@ -184,6 +187,23 @@ chmod +x service-install.sh
 ```
 ./service-install.sh
 ```
+
+9. Optional (If Method 1 is used):
+
+You should disable the service when using Method 1, as the processes will not be hidden automatically on boot, and just when using the mount command. Disable the automatic starting of the service with the command below. Else this might get you banned.
+
+```
+sudo systemctl disable <system name you specified before>
+```
+and
+
+
+```
+sudo systemctl start <system name you specified before> 
+```
+
+Use this every time you want to use the driver again !!! DON'T USE WHEN ROOT PROCESSES AREN'T HIDDEN IN "ps aux" !!!
+
 
 Once you've followed these instructions, `http-driver` is ready for use!
 
