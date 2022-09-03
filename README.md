@@ -51,12 +51,14 @@ sudo pacman -S vim # Arch based distros
 
 Some components might not work when hiding `/proc`, like mounting a drive via as example Dolphin. This can be bypassed by mounting `/proc` only when necessary (Method 1), other than always hiding `/proc` on boot via fstab (Method2).
 
-### Method 1 (Has to be done again after a restart):
+### Method 1 (Has to be done again after a reboot):
 
 
 ```
 sudo mount -o remount,rw,nosuid,nodev,noexec,relatime,hidepid=2 /proc
 ```
+
+Reboot your system to see root processes again.
 
 
 ### Method 2 (Will always hide processes at boot, might break things):
@@ -88,8 +90,33 @@ ps aux
 See [this page for more information](https://www.kernel.org/doc/Documentation/filesystems/proc.txt) on process isolation.
 
 ## (3) Disable Process Tracing
-
 We'll ensure that non-root users cannot use `ptrace` capabilities.
+
+### Method 1 (Has to be done again after a reboot):
+
+1. Change the `kernel.yama.ptrace_scope` value to `2`:
+
+```
+echo 2 | sudo tee /proc/sys/kernel/yama/ptrace_scope
+```
+
+2. Check that the `ptrace_scope` is set to `2`:
+
+```
+sysctl kernel.yama.ptrace_scope
+```
+
+Set `ptrace_scope` to `1` if you want to return to the default value:
+
+```
+echo 1 | sudo tee /proc/sys/kernel/yama/ptrace_scope
+```
+
+
+
+### Method 2 (Will always disable `ptrace` on boot, may break things [i.e. League Of Legends])
+
+See [this page for more information](https://www.kernel.org/doc/Documentation/security/Yama.txt) on process tracing.
 
 1. Open `/etc/sysctl.d/10-ptrace.conf` with *vim*:
 
@@ -114,8 +141,6 @@ reboot
 ```
 sysctl kernel.yama.ptrace_scope
 ```
-
-See [this page for more information](https://www.kernel.org/doc/Documentation/security/Yama.txt) on process tracing.
 
 ## (4) Install .NET
 
